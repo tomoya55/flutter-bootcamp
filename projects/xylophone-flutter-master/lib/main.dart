@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audio_cache.dart';
 
 void main() => runApp(XylophoneApp());
 
 class XylophoneApp extends StatelessWidget {
-  AudioPlayer audioPlayer = AudioPlayer();
+  final AudioCache audioPlayer = AudioCache();
 
   void playLocal(String path) async {
-    int result = await audioPlayer.play(path, isLocal: true);
-    if (result == 1) {
-      print("playe")
-    }
+    audioPlayer.play(path);
   }
 
   @override
@@ -23,12 +20,18 @@ class XylophoneApp extends StatelessWidget {
         body: SafeArea(
           child: Container(
             child: Center(
+              child: FlatButton(
+                onPressed: () {
+                  playLocal("note1.wav");
+                },
                 child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 20,
+                  text,
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
               ),
-            )),
+            ),
           ),
         ),
       ),
