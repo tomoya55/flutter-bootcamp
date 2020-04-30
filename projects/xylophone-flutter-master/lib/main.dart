@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
 import 'package:audioplayers/audio_cache.dart';
 
 void main() => runApp(XylophoneApp());
@@ -11,27 +10,35 @@ class XylophoneApp extends StatelessWidget {
     audioPlayer.play(path);
   }
 
+  final List<MaterialColor> colors = [
+    Colors.red,
+    Colors.orange,
+    Colors.yellow,
+    Colors.green,
+    Colors.teal,
+    Colors.blue,
+    Colors.purple,
+  ];
+
   @override
   Widget build(BuildContext context) {
-    String text = adjectives[2];
-
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.black,
         body: SafeArea(
-          child: Container(
-            child: Center(
-              child: FlatButton(
-                onPressed: () {
-                  playLocal("note1.wav");
-                },
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: colors.asMap().entries.map((entry) {
+              int idx = entry.key + 1;
+              MaterialColor color = entry.value;
+              return Expanded(
+                child: FlatButton(
+                  onPressed: () => playLocal("note$idx.wav"),
+                  color: color,
+                  child: Text(''),
                 ),
-              ),
-            ),
+              );
+            }).toList(),
           ),
         ),
       ),
