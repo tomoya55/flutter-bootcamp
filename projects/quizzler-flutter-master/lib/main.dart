@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'quiz_brain.dart';
 
 void main() => runApp(Quizzler());
 
@@ -24,7 +25,20 @@ class QuizPage extends StatefulWidget {
   _QuizPageState createState() => _QuizPageState();
 }
 
+QuizBrain brain = QuizBrain();
+
 class _QuizPageState extends State<QuizPage> {
+  List<Widget> scores = [];
+
+  Icon okIcon = Icon(
+    Icons.check,
+    color: Colors.green,
+  );
+  Icon ngIcon = Icon(
+    Icons.close,
+    color: Colors.red,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,7 +51,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                brain.getText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -61,7 +75,13 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                //The user picked true.
+                setState(() {
+                  if (!brain.finished()) {
+                    Icon icon = brain.check(true) ? okIcon : ngIcon;
+                    scores.add(icon);
+                    brain.nextQuestion();
+                  }
+                });
               },
             ),
           ),
@@ -79,12 +99,20 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                //The user picked false.
+                setState(() {
+                  if (!brain.finished()) {
+                    Icon icon = brain.check(false) ? okIcon : ngIcon;
+                    scores.add(icon);
+                    brain.nextQuestion();
+                  }
+                });
               },
             ),
           ),
         ),
-        //TODO: Add a Row here as your score keeper
+        Row(
+          children: scores,
+        ),
       ],
     );
   }
