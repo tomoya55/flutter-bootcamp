@@ -23,6 +23,10 @@ class QuizBrain {
     return _index == _questions.length;
   }
 
+  void reset() {
+    _index = 0;
+  }
+
   List<Question> _questions = [
     Question('Some cats are actually allergic to humans', true),
     Question('You can lead a cow down stairs but not up stairs.', false),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'quiz_brain.dart';
 
 void main() => runApp(Quizzler());
@@ -39,6 +40,25 @@ class _QuizPageState extends State<QuizPage> {
     color: Colors.red,
   );
 
+  void checkAnswer(bool userPicked) {
+    setState(() {
+      if (brain.finished()) {
+        Alert(
+          context: context,
+          title: "Quizzler",
+          desc: "Done!",
+        ).show();
+
+        brain.reset();
+        scores.clear();
+      } else {
+        Icon icon = brain.check(userPicked) ? okIcon : ngIcon;
+        scores.add(icon);
+        brain.nextQuestion();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -75,13 +95,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                setState(() {
-                  if (!brain.finished()) {
-                    Icon icon = brain.check(true) ? okIcon : ngIcon;
-                    scores.add(icon);
-                    brain.nextQuestion();
-                  }
-                });
+                checkAnswer(true);
               },
             ),
           ),
@@ -99,13 +113,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                setState(() {
-                  if (!brain.finished()) {
-                    Icon icon = brain.check(false) ? okIcon : ngIcon;
-                    scores.add(icon);
-                    brain.nextQuestion();
-                  }
-                });
+                checkAnswer(false);
               },
             ),
           ),
