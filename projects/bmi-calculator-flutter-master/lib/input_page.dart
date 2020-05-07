@@ -17,6 +17,8 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   Gender selected;
   int height = 180;
+  int weight = 60;
+  int age = 40;
 
   Color getColor(Gender g) => (g == Gender.male && selected == Gender.male) ||
           (g == Gender.female && selected == Gender.female)
@@ -121,10 +123,24 @@ class _InputPageState extends State<InputPage> {
             child: Row(
               children: [
                 Expanded(
-                  child: ReuseableCard(color: kActiveCardColor),
+                  child: ReusableCounter(
+                      label: 'WEIGHT',
+                      value: weight,
+                      onChange: (int val) {
+                        setState(() {
+                          weight = val;
+                        });
+                      }),
                 ),
                 Expanded(
-                  child: ReuseableCard(color: kActiveCardColor),
+                  child: ReusableCounter(
+                      label: 'AGE',
+                      value: age,
+                      onChange: (int val) {
+                        setState(() {
+                          age = val;
+                        });
+                      }),
                 ),
               ],
             ),
@@ -136,6 +152,80 @@ class _InputPageState extends State<InputPage> {
             height: bottomContainerHeight,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ReusableCounter extends StatelessWidget {
+  const ReusableCounter({
+    @required this.label,
+    @required this.value,
+    @required this.onChange,
+  });
+
+  final String label;
+  final int value;
+  final Function onChange;
+
+  @override
+  Widget build(BuildContext context) {
+    return ReuseableCard(
+      color: kActiveCardColor,
+      cardChild: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            style: kLabelTextStyle,
+          ),
+          Text(
+            value.toString(),
+            style: kBoldLabelTextStyle,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RoundIconButton(
+                icon: FontAwesomeIcons.minus,
+                onPressed: () {
+                  onChange(value - 1);
+                },
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              RoundIconButton(
+                icon: FontAwesomeIcons.plus,
+                onPressed: () {
+                  onChange(value + 1);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RoundIconButton extends StatelessWidget {
+  final IconData icon;
+  final Function onPressed;
+
+  RoundIconButton({@required this.icon, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      child: Icon(icon),
+      elevation: 0.0,
+      onPressed: onPressed,
+      shape: CircleBorder(),
+      fillColor: Color(0xFF4CF5E),
+      constraints: BoxConstraints.tightFor(
+        width: 56.0,
+        height: 56.0,
       ),
     );
   }
