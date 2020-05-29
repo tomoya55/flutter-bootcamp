@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "0",
+    "firebase_url": "https://dummy.firebaseio.com",
+    "project_id": "udemy-flutter-dummy",
+    "storage_bucket": "udemy-flutter-dummy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:projectid:android:dummy",
+        "android_client_info": {
+          "package_name": "com.nicecabbage.flash_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "dummy.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "dummy"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "dummy.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
