@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:todoey_flutter/todos.dart';
 import 'package:todoey_flutter/widgets/add_task.dart';
 
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends StatefulWidget {
+  final List<TodoItem> tasks;
+  TasksScreen({this.tasks});
+
+  @override
+  _TasksScreenState createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +21,13 @@ class TasksScreen extends StatelessWidget {
             context: context,
             builder: (context) => SingleChildScrollView(
               child: Container(
-                child: AddTask(),
+                child: AddTask(onPressed: (String text) {
+                  setState(() {
+                    widget.tasks.add(
+                      TodoItem(text: text, done: false),
+                    );
+                  });
+                }),
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
               ),
@@ -81,11 +95,14 @@ class TasksScreen extends StatelessWidget {
                   topRight: Radius.circular(20.0),
                 ),
               ),
-              child: ListView(
-                children: todos.map((t) {
-                  return TaskItem(t);
-                }).toList(),
-              ),
+              child: TasksList(
+                  tasks: widget.tasks,
+                  onChanged: (bool val, int index) {
+                    print('onCheckChanged $val');
+                    setState(() {
+                      widget.tasks[index].done = val;
+                    });
+                  }),
             ),
           ),
         ],
@@ -94,16 +111,31 @@ class TasksScreen extends StatelessWidget {
   }
 }
 
-class TaskItem extends StatefulWidget {
-  final TodoItem todo;
-
-  TaskItem(this.todo);
+class TasksList extends StatelessWidget {
+  final List<TodoItem> tasks;
+  final Function onChanged;
+  TasksList({this.tasks, this.onChanged});
 
   @override
-  _TaskItemState createState() => _TaskItemState();
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        return TaskItem(
+            todo: tasks[index],
+            onCheckChanged: (bool val) {
+              onChanged(val, index);
+            });
+      },
+      itemCount: tasks.length,
+    );
+  }
 }
 
-class _TaskItemState extends State<TaskItem> {
+class TaskItem extends StatelessWidget {
+  final TodoItem todo;
+  final Function onCheckChanged;
+  TaskItem({this.todo, this.onCheckChanged});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -112,21 +144,16 @@ class _TaskItemState extends State<TaskItem> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            widget.todo.text,
+            todo.text,
             style: TextStyle(
               fontSize: 20.0,
-              decoration: widget.todo.done
-                  ? TextDecoration.lineThrough
-                  : TextDecoration.none,
+              decoration:
+                  todo.done ? TextDecoration.lineThrough : TextDecoration.none,
             ),
           ),
           Checkbox(
-            value: false,
-            onChanged: (value) {
-              setState(() {
-                widget.todo.done = value;
-              });
-            },
+            value: todo.done,
+            onChanged: onCheckChanged,
           ),
         ],
       ),

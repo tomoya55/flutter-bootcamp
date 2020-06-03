@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:todoey_flutter/todos.dart';
 
 class AddTask extends StatelessWidget {
+  final Function onPressed;
   final _textController = TextEditingController();
+
+  AddTask({this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +41,7 @@ class AddTask extends StatelessWidget {
             ),
             FlatButton(
               color: Colors.lightBlueAccent,
-              onPressed: () {
-                todos.add(
-                  TodoItem(text: _textController.value.text, done: false),
-                );
-              },
+              onPressed: () => onPressed(_textController.value.text),
               child: Text(
                 'Add',
                 style: TextStyle(color: Colors.white),

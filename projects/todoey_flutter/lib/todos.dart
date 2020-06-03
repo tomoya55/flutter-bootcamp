@@ -1,5 +1,5 @@
 class TodoItem {
-  String text;
+  final String text;
   bool done;
   TodoItem({this.text, this.done});
 }
