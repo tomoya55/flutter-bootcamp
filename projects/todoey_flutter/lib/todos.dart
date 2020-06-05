@@ -22,4 +22,9 @@ class TaskModel extends ChangeNotifier {
     tasks.add(item);
     notifyListeners();
   }
+
+  void deleteTask(int index) {
+    tasks.removeAt(index);
+    notifyListeners();
+  }
 }

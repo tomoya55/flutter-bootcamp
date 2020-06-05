@@ -125,14 +125,19 @@ class TaskItem extends StatelessWidget {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                todo.text,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  decoration: todo.done
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
+              GestureDetector(
+                child: Text(
+                  todo.text,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    decoration: todo.done
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                  ),
                 ),
+                onLongPress: () {
+                  model.deleteTask(index);
+                },
               ),
               Checkbox(
                 value: todo.done,
