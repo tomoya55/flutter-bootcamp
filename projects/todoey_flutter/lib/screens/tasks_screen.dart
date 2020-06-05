@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:todoey_flutter/todos.dart';
 import 'package:todoey_flutter/widgets/add_task.dart';
+import 'package:provider/provider.dart';
 
-class TasksScreen extends StatefulWidget {
-  final List<TodoItem> tasks;
-  TasksScreen({this.tasks});
-
-  @override
-  _TasksScreenState createState() => _TasksScreenState();
-}
-
-class _TasksScreenState extends State<TasksScreen> {
+class TasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,14 +14,7 @@ class _TasksScreenState extends State<TasksScreen> {
             context: context,
             builder: (context) => SingleChildScrollView(
               child: Container(
-                child: AddTask(onPressed: (String text) {
-                  setState(() {
-                    widget.tasks.add(
-                      TodoItem(text: text, done: false),
-                    );
-                  });
-                  Navigator.pop(context);
-                }),
+                child: AddTask(),
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
               ),
@@ -76,13 +62,17 @@ class _TasksScreenState extends State<TasksScreen> {
                 SizedBox(
                   height: 0.0,
                 ),
-                Text(
-                  '${widget.tasks.length} Tasks',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w300,
-                  ),
+                Consumer<TaskModel>(
+                  builder: (context, model, child) {
+                    return Text(
+                      '${model.tasks.length} Tasks',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -96,14 +86,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   topRight: Radius.circular(20.0),
                 ),
               ),
-              child: TasksList(
-                  tasks: widget.tasks,
-                  onChanged: (bool val, int index) {
-                    print('onCheckChanged $val');
-                    setState(() {
-                      widget.tasks[index].done = val;
-                    });
-                  }),
+              child: TasksList(),
             ),
           ),
         ],
@@ -113,50 +96,53 @@ class _TasksScreenState extends State<TasksScreen> {
 }
 
 class TasksList extends StatelessWidget {
-  final List<TodoItem> tasks;
-  final Function onChanged;
-  TasksList({this.tasks, this.onChanged});
-
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return TaskItem(
-            todo: tasks[index],
-            onCheckChanged: (bool val) {
-              onChanged(val, index);
-            });
+    return Consumer<TaskModel>(
+      builder: (context, model, child) {
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            return TaskItem(index: index);
+          },
+          itemCount: model.tasks.length,
+        );
       },
-      itemCount: tasks.length,
     );
   }
 }
 
 class TaskItem extends StatelessWidget {
-  final TodoItem todo;
-  final Function onCheckChanged;
-  TaskItem({this.todo, this.onCheckChanged});
+  final int index;
+  TaskItem({this.index});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(left: 30.0, right: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            todo.text,
-            style: TextStyle(
-              fontSize: 20.0,
-              decoration:
-                  todo.done ? TextDecoration.lineThrough : TextDecoration.none,
-            ),
-          ),
-          Checkbox(
-            value: todo.done,
-            onChanged: onCheckChanged,
-          ),
-        ],
+      child: Consumer<TaskModel>(
+        builder: (context, model, child) {
+          final todo = model.tasks[index];
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                todo.text,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  decoration: todo.done
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
+                ),
+              ),
+              Checkbox(
+                value: todo.done,
+                onChanged: (bool value) {
+                  model.toggle(index, value);
+                },
+              ),
+            ],
+          );
+        },
       ),
     );
   }

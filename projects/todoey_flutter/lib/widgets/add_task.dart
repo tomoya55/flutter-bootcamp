@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey_flutter/todos.dart';
 
 class AddTask extends StatelessWidget {
-  final Function onPressed;
   final _textController = TextEditingController();
-
-  AddTask({this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,13 @@ class AddTask extends StatelessWidget {
             ),
             FlatButton(
               color: Colors.lightBlueAccent,
-              onPressed: () => onPressed(_textController.value.text),
+              onPressed: () {
+                final model = Provider.of<TaskModel>(context, listen: false);
+                model.addTask(
+                  TodoItem(text: _textController.value.text, done: false),
+                );
+                Navigator.pop(context);
+              },
               child: Text(
                 'Add',
                 style: TextStyle(color: Colors.white),

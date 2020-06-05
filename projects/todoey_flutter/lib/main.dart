@@ -10,12 +10,10 @@ void main() {
 class Todoey extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider<String>(
-      create: (context) {
-        return "hello";
-      },
+    return ChangeNotifierProvider(
+      create: (context) => TaskModel(),
       child: MaterialApp(
-        home: TasksScreen(tasks: todos),
+        home: TasksScreen(),
       ),
     );
   }
