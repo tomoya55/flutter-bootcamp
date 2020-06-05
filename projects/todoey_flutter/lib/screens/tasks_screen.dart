@@ -27,6 +27,7 @@ class _TasksScreenState extends State<TasksScreen> {
                       TodoItem(text: text, done: false),
                     );
                   });
+                  Navigator.pop(context);
                 }),
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -76,7 +77,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   height: 0.0,
                 ),
                 Text(
-                  '12 Tasks',
+                  '${widget.tasks.length} Tasks',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todoey_flutter/todos.dart';
 
 class AddTask extends StatelessWidget {
   final Function onPressed;
